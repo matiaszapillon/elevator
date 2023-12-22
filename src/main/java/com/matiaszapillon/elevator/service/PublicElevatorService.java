@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class PublicElevatorService implements ElevatorService {
@@ -24,15 +25,11 @@ public class PublicElevatorService implements ElevatorService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void validateKeyCardForRestrictedFloors(String introducedKeycode, PublicElevator elevator) {
-        String keycodeFromElevator = elevator.getKeycode();
-        if(StringUtils.hasText(introducedKeycode)
-                && !BCrypt.checkpw(introducedKeycode, keycodeFromElevator)) {
-            throw new IncorrectKeyCodeException("The keycard was either not introduced or it is incorrect");
-        }
-
+    @Override
+    public List<PublicElevator> findAll() {
+        return publicElevatorRepository.findAll();
     }
-
+    @Override
     public PublicElevator findById(Long id) {
         return publicElevatorRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Elevator not found with id " + id));
@@ -40,20 +37,17 @@ public class PublicElevatorService implements ElevatorService {
 
     @Override
     public void updateElevator(Long elevatorId, ElevatorDTO elevatorDTO) {
-        PublicElevator elevator = this.findById(elevatorId);
+        PublicElevator elevatorToUpdate = this.findById(elevatorId);
         Integer selectedFloor = elevatorDTO.getFloor();
         if(isRestrictedFloor(selectedFloor)) {
-            this.validateKeyCardForRestrictedFloors(elevator.getKeycode(), elevator);
+            this.validateKeyCardForRestrictedFloors(elevatorDTO.getKeycode(), elevatorToUpdate);
         }
-        this.validateWeight(elevatorDTO.getWeight(), elevator);
-        elevator.setCurrentFloor(elevatorDTO.getFloor());
-        publicElevatorRepository.save(elevator);
+        this.validateWeight(elevatorDTO.getWeight(), elevatorToUpdate);
+        elevatorToUpdate.setCurrentFloor(elevatorDTO.getFloor());
+        publicElevatorRepository.save(elevatorToUpdate);
     }
 
-    private boolean isRestrictedFloor(Integer selectedFloor) {
-        return Arrays.asList(PublicElevator.RESTRICTED_FLOORS).contains(selectedFloor);
-    }
-
+    @Override
     public void validateWeight(long weight, Elevator elevator) {
         if(!elevator.isValidWeight(weight)) {
             throw new ExceededWeightLimitException("Weight limit has been exceeded - Unable to proceed");
@@ -66,5 +60,17 @@ public class PublicElevatorService implements ElevatorService {
         String encryptedKeyCode = passwordEncoder.encode(publicElevator.getKeycode());
         publicElevator.setKeycode(encryptedKeyCode);
         return publicElevatorRepository.save(publicElevator);
+    }
+
+    private boolean isRestrictedFloor(Integer selectedFloor) {
+        return Arrays.asList(PublicElevator.RESTRICTED_FLOORS).contains(selectedFloor);
+    }
+
+    private void validateKeyCardForRestrictedFloors(String introducedKeycode, PublicElevator elevator) {
+        String keycodeFromElevator = elevator.getKeycode();
+        if(!StringUtils.hasText(introducedKeycode)
+                || !BCrypt.checkpw(introducedKeycode, keycodeFromElevator)) {
+            throw new IncorrectKeyCodeException("The keycard was either not introduced or it is incorrect");
+        }
     }
 }

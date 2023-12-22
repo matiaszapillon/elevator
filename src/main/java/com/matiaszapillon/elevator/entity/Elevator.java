@@ -14,6 +14,14 @@ public abstract class Elevator {
     private final Long weightLimit;
     private Integer currentFloor = 0;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     protected Elevator(Long weightLimit) {
         this.weightLimit = weightLimit;
     }

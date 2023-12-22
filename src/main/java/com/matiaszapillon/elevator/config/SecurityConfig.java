@@ -1,6 +1,5 @@
 package com.matiaszapillon.elevator.config;
 
-import com.matiaszapillon.elevator.entity.Elevator;
 import com.matiaszapillon.elevator.entity.FreightElevator;
 import com.matiaszapillon.elevator.entity.PublicElevator;
 import com.matiaszapillon.elevator.service.ElevatorService;
@@ -22,7 +21,7 @@ public class SecurityConfig {
         return (args) -> {
             PublicElevator publicElevator = new PublicElevator();
             publicElevator.setKeycode("12345");
-            Elevator freightElevator = new FreightElevator();
+            FreightElevator freightElevator = new FreightElevator();
 
             // initializes both elevators
             elevatorServiceList.forEach(
@@ -38,10 +37,8 @@ public class SecurityConfig {
         };
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
-        //I could create a SecurityConfig class with the @configuration annotation instead of creating the beans here also
         return new BCryptPasswordEncoder();
     }
 }
