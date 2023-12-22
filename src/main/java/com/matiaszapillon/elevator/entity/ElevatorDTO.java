@@ -1,13 +1,18 @@
 package com.matiaszapillon.elevator.entity;
 
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class ElevatorDTO {
     @NotNull(message = "weight is mandatory.")
     private Long weight;
     private String keycode;
 
+    @Min(value = -1, message = "Floor should not be less than -1")
+    @Max(value = 50, message = "Floor should not be greater than 50")
     @NotNull(message = "floor is mandatory.")
     private Integer floor;
 

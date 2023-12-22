@@ -12,6 +12,7 @@ public interface ElevatorService {
 
     void updateElevator(Long elevatorId, ElevatorDTO elevatorDTO);
 
+    //Evaluate if it makes sense to add the logic for validating the weight here with a default method.
     void validateWeight(long weight, Elevator elevator);
 
     Elevator createNewElevator(Elevator elevator);

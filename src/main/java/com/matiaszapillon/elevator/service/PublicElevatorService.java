@@ -68,8 +68,7 @@ public class PublicElevatorService implements ElevatorService {
 
     private void validateKeyCardForRestrictedFloors(String introducedKeycode, PublicElevator elevator) {
         String keycodeFromElevator = elevator.getKeycode();
-        if(!StringUtils.hasText(introducedKeycode)
-                || !BCrypt.checkpw(introducedKeycode, keycodeFromElevator)) {
+        if(!StringUtils.hasText(introducedKeycode) || !BCrypt.checkpw(introducedKeycode, keycodeFromElevator)) {
             throw new IncorrectKeyCodeException("The keycard was either not introduced or it is incorrect");
         }
     }
