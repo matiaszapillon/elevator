@@ -1,5 +1,6 @@
 package com.matiaszapillon.elevator.controller;
 
+import com.matiaszapillon.elevator.entity.Elevator;
 import com.matiaszapillon.elevator.entity.ElevatorDTO;
 import com.matiaszapillon.elevator.service.ElevatorService;
 import jakarta.validation.Valid;
@@ -17,6 +18,12 @@ public class FreightElevatorController {
         this.elevatorService = elevatorService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getElevatorById(@PathVariable Long id){
+        Elevator elevator = elevatorService.findById(id);
+        return new ResponseEntity<>(elevator, HttpStatus.OK);
+    }
+    
     @GetMapping
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(elevatorService.findAll(), HttpStatus.OK);

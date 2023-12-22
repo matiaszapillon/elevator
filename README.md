@@ -20,6 +20,7 @@ json body example:
 "keycode":"12345"
 }
 
+To confirm the current floor in which any elevator is, we need to do a GET indicating the ID
 ## Database (H2):
 http://localhost:8080/h2-console
 

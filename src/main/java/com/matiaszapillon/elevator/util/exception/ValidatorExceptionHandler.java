@@ -28,42 +28,35 @@ public class ValidatorExceptionHandler {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<?> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex) {
-        ApiErrorRecord apiError = initializeApiErrorRecordResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        ApiErrorResponse apiError = initializeApiErrorRecordResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ApiErrorRecord apiError = initializeApiErrorRecordResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        ApiErrorResponse apiError = initializeApiErrorRecordResponse(HttpStatus.NOT_FOUND, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(IncorrectKeyCodeException.class)
     public ResponseEntity<?> handleIncorrectKeyCodeException(IncorrectKeyCodeException ex) {
-        ApiErrorRecord apiError = initializeApiErrorRecordResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ApiErrorResponse apiError = initializeApiErrorRecordResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ExceededWeightLimitException.class)
     public ResponseEntity<?> handleExceededWeightLimitException(ExceededWeightLimitException ex) {
-        ApiErrorRecord apiError = initializeApiErrorRecordResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ApiErrorResponse apiError = initializeApiErrorRecordResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> handleGenericException(Exception ex) {
-        ApiErrorRecord apiError = initializeApiErrorRecordResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        ApiErrorResponse apiError = initializeApiErrorRecordResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ApiErrorRecord initializeApiErrorRecordResponse(HttpStatus status, String errorMessage) {
-        return new ApiErrorRecord(status, errorMessage, LocalDateTime.now());
-    }
-    private ApiError initializeApiErrorResponse(HttpStatus status, String errorMessage) {
-        return ApiError.builder()
-                .httpStatus(status)
-                .message(errorMessage)
-                .timestamp(LocalDateTime.now())
-                .build();
+    private ApiErrorResponse initializeApiErrorRecordResponse(HttpStatus status, String errorMessage) {
+        return new ApiErrorResponse(status, errorMessage, LocalDateTime.now());
     }
 }

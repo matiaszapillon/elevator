@@ -1,9 +1,11 @@
 package com.matiaszapillon.elevator.controller;
 
 
+import com.matiaszapillon.elevator.entity.Elevator;
 import com.matiaszapillon.elevator.entity.ElevatorDTO;
 import com.matiaszapillon.elevator.service.ElevatorService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,13 @@ public class PublicElevatorController {
     @GetMapping
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(elevatorService.findAll(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getElevatorById(@PathVariable Long id){
+        Elevator elevator = elevatorService.findById(id);
+        return new ResponseEntity<>(elevator, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
